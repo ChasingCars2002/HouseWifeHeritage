@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [root]
+    branches: [claude/housewife-heritage-database-8Dgt2]
   workflow_dispatch:
 
 permissions:
