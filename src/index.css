@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #C5A55A;
+  --color-gold-light: #E8D5A3;
+  --color-gold-dark: #A68B3E;
+  --color-marble: #F5F0E8;
+  --color-marble-dark: #E8E0D0;
+  --color-diamond: #FAFBFC;
+  --color-obsidian: #1A1A2E;
+  --color-champagne: #F7F3E9;
+  --color-rose: #C4808F;
+  --color-rose-light: #F2D4D8;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-diamond);
+    color: var(--color-obsidian);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+/* Marble texture overlay */
+.marble-bg {
+  background-image:
+    linear-gradient(135deg, rgba(197, 165, 90, 0.03) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(197, 165, 90, 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(197, 165, 90, 0.02) 25%, transparent 25%);
+  background-size: 60px 60px, 80px 80px, 100px 100px;
+}
+
+/* Gold shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-dark) 0%,
+    var(--color-gold-light) 50%,
+    var(--color-gold-dark) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-marble);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 3px;
+}
+
+/* Timeline connector */
+.timeline-line {
+  background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-light));
+}
