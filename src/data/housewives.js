@@ -1,693 +1,84 @@
-export const cities = [
-  'Beverly Hills',
-  'Atlanta',
-  'New York City',
-  'New Jersey',
-  'Potomac',
-  'Salt Lake City',
-  'Miami',
-  'Orange County',
-  'Dubai',
-]
+import { people } from './entities/people'
+import { controversiesByPersonId, franchiseById, relationshipsByPersonId } from './indexes'
 
 export const statuses = ['OG', 'Housewife', 'Friend of', 'Alum']
-
 export const zodiacSigns = [
   'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
   'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces',
 ]
 
-export const housewives = [
-  {
-    id: 1,
-    name: 'Lisa Vanderpump',
-    city: 'Beverly Hills',
-    status: 'Alum',
-    zodiac: 'Virgo',
-    seasons: '1-9',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    taglines: [
-      { season: 1, text: 'In Beverly Hills, it\'s who you know, and I know everyone.' },
-      { season: 2, text: 'Life in Beverly Hills is a game, and I make the rules.' },
-      { season: 3, text: 'Life isn\'t all diamonds and rosé... but it should be.' },
-      { season: 5, text: 'The crown is heavy, darlings, so just leave it where it belongs.' },
-      { season: 9, text: 'I\'m an OG Housewife, and I still hold the diamond.' },
-    ],
-    bio: 'British-born restaurateur and philanthropist who became the undisputed queen of Beverly Hills. Known for her sharp wit, lavish lifestyle at Villa Rosa, and her empire of restaurants including the iconic SUR.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Lisa_Vanderpump_2013.jpg/440px-Lisa_Vanderpump_2013.jpg',
-    color: '#D4AF37',
-    alliances: ['Kyle Richards', 'Dorit Kemsley'],
-    enemies: ['Lisa Rinna', 'Kyle Richards'],
-    receipts: [
-      { year: 2010, event: 'Joins RHOBH Season 1 as an original cast member', type: 'milestone' },
-      { year: 2013, event: 'SUR becomes the setting for Vanderpump Rules spinoff', type: 'business' },
-      { year: 2016, event: 'Vanderpump Dogs Foundation gains national attention', type: 'milestone' },
-      { year: 2018, event: 'Puppygate scandal dominates Season 9', type: 'drama' },
-      { year: 2019, event: 'Departs RHOBH after Season 9', type: 'milestone' },
-    ],
-  },
-  {
-    id: 2,
-    name: 'NeNe Leakes',
-    city: 'Atlanta',
-    status: 'Alum',
-    zodiac: 'Sagittarius',
-    seasons: '1-7, 10-12',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 10, 11, 12],
-    taglines: [
-      { season: 1, text: 'I don\'t keep up with the Joneses. I am the Joneses.' },
-      { season: 2, text: 'Money is power. I have both.' },
-      { season: 5, text: 'I am the glue. Without me, the whole franchise falls apart.' },
-      { season: 10, text: 'I never lost my peach. I took a break to let it marinate.' },
-    ],
-    bio: 'The undeniable star of RHOA and reality TV royalty. NeNe\'s larger-than-life personality, iconic reads, and memorable catchphrases ("Bloop!") made her a cultural phenomenon far beyond Bravo.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/NeNe_Leakes_2009.jpg/440px-NeNe_Leakes_2009.jpg',
-    color: '#8B0000',
-    alliances: ['Cynthia Bailey', 'Marlo Hampton'],
-    enemies: ['Kim Zolciak', 'Kenya Moore'],
-    receipts: [
-      { year: 2008, event: 'Debuts as RHOA original cast member', type: 'milestone' },
-      { year: 2009, event: '"Close your legs to married men" becomes iconic', type: 'drama' },
-      { year: 2014, event: 'Stars on Broadway in Cinderella and guest roles on Glee', type: 'business' },
-      { year: 2015, event: 'Temporarily leaves RHOA', type: 'milestone' },
-      { year: 2017, event: 'Returns triumphantly for Season 10', type: 'milestone' },
-      { year: 2020, event: 'Final departure from RHOA after Season 12', type: 'milestone' },
-    ],
-  },
-  {
-    id: 3,
-    name: 'Teresa Giudice',
-    city: 'New Jersey',
-    status: 'OG',
-    zodiac: 'Taurus',
-    seasons: '1-14',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 1, text: 'I don\'t look back. I just drive.' },
-      { season: 3, text: 'Haters are gonna hate, but I just love, love, love.' },
-      { season: 6, text: 'I\'m a Jersey girl. No one can knock me down.' },
-      { season: 8, text: 'I used to flip tables. Now I turn them.' },
-      { season: 11, text: 'People try to knock me down, but I always get back up.' },
-    ],
-    bio: 'The table-flipping queen of New Jersey who became one of reality TV\'s most resilient figures. From legal battles to personal transformations, Teresa has remained a central force on RHONJ for over a decade.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Teresa_Giudice_2019_by_Glenn_Francis.jpg/440px-Teresa_Giudice_2019_by_Glenn_Francis.jpg',
-    color: '#2E8B57',
-    alliances: ['Dolores Catania', 'Jennifer Aydin'],
-    enemies: ['Melissa Gorga', 'Jackie Goldschneider'],
-    receipts: [
-      { year: 2009, event: 'Flips the table at the Season 1 reunion — TV history is made', type: 'drama' },
-      { year: 2010, event: 'Releases NYT bestselling cookbook "Skinny Italian"', type: 'business' },
-      { year: 2014, event: 'Sentenced to 15 months for fraud charges', type: 'legal' },
-      { year: 2015, event: 'Reports to prison; becomes most talked-about Housewife', type: 'legal' },
-      { year: 2016, event: 'Released from prison and returns to RHONJ', type: 'milestone' },
-      { year: 2022, event: 'Marries Luis Ruelas in a lavish ceremony', type: 'milestone' },
-    ],
-  },
-  {
-    id: 4,
-    name: 'Bethenny Frankel',
-    city: 'New York City',
-    status: 'Alum',
-    zodiac: 'Scorpio',
-    seasons: '1-3, 7-11',
-    seasonsArray: [1, 2, 3, 7, 8, 9, 10, 11],
-    taglines: [
-      { season: 1, text: 'I\'m not a Housewife, but I am real.' },
-      { season: 7, text: 'I\'m back, and I\'m not holding anything back.' },
-      { season: 8, text: 'If you can\'t handle the truth, you can\'t handle me.' },
-      { season: 11, text: 'This is my town. I own it, and you\'re all just living in it.' },
-    ],
-    bio: 'The mogul who turned a cocktail recipe into a billion-dollar brand. Bethenny\'s sharp tongue, business acumen, and philanthropic work with BStrong made her one of the most successful Housewives ever.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Bethenny_Frankel_2012_Shankbone.JPG/440px-Bethenny_Frankel_2012_Shankbone.JPG',
-    color: '#4169E1',
-    alliances: ['Carole Radziwill', 'Dorinda Medley'],
-    enemies: ['Jill Zarin', 'Ramona Singer', 'Carole Radziwill'],
-    receipts: [
-      { year: 2008, event: 'Debuts on RHONY Season 1', type: 'milestone' },
-      { year: 2009, event: 'Skinnygirl Margarita is born — the cocktail that changed everything', type: 'business' },
-      { year: 2011, event: 'Sells Skinnygirl Cocktails for reported $100M+', type: 'business' },
-      { year: 2015, event: 'Returns to RHONY in a blockbuster comeback', type: 'milestone' },
-      { year: 2017, event: 'Founds BStrong disaster relief initiative', type: 'milestone' },
-      { year: 2019, event: 'Exits RHONY for the second time', type: 'milestone' },
-    ],
-  },
-  {
-    id: 5,
-    name: 'Kyle Richards',
-    city: 'Beverly Hills',
-    status: 'OG',
-    zodiac: 'Capricorn',
-    seasons: '1-14',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 1, text: 'In this town, I\'m the one with the real story to tell.' },
-      { season: 5, text: 'I\'m not the richest girl in Beverly Hills, but I am the luckiest.' },
-      { season: 10, text: 'In Beverly Hills, the truth always has a way of coming out.' },
-      { season: 13, text: 'If you can\'t be my friend, at least don\'t be my enemy.' },
-    ],
-    bio: 'Former child star turned the last OG standing of RHOBH. Kyle\'s journey through sisterly feuds, friendship dramas, and personal reinvention has made her the backbone of the Beverly Hills franchise.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Kyle_Richards_2023_crop.jpg/440px-Kyle_Richards_2023_crop.jpg',
-    color: '#9932CC',
-    alliances: ['Teddi Mellencamp', 'Dorit Kemsley'],
-    enemies: ['Kim Richards', 'Lisa Vanderpump', 'Erika Jayne'],
-    receipts: [
-      { year: 2010, event: 'Joins RHOBH as an original cast member with sister Kim', type: 'milestone' },
-      { year: 2011, event: 'Limousine fight with Kim: "You stole my goddamn house!"', type: 'drama' },
-      { year: 2018, event: 'Opens Kyle + Alene Too boutique in Beverly Hills', type: 'business' },
-      { year: 2021, event: 'Stars in Halloween Kills, returning to the franchise', type: 'business' },
-      { year: 2023, event: 'Separation from Mauricio Umansky rocks Season 13', type: 'drama' },
-    ],
-  },
-  {
-    id: 6,
-    name: 'Kenya Moore',
-    city: 'Atlanta',
-    status: 'Housewife',
-    zodiac: 'Aquarius',
-    seasons: '5-14',
-    seasonsArray: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 5, text: 'Don\'t come for me unless I send for you.' },
-      { season: 7, text: 'People get exhausted trying to be on my level.' },
-      { season: 9, text: 'I give the people what they want. Twirl.' },
-      { season: 12, text: 'The queen always has the last word.' },
-    ],
-    bio: 'Former Miss USA turned RHOA powerhouse. Kenya\'s iconic twirl, sharp reads, and unapologetic confidence make her one of the most entertaining and polarizing Housewives in franchise history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Kenya_Moore_2014.jpg/440px-Kenya_Moore_2014.jpg',
-    color: '#FF1493',
-    alliances: ['Cynthia Bailey', 'Kandi Burruss'],
-    enemies: ['NeNe Leakes', 'Porsha Williams', 'Marlo Hampton'],
-    receipts: [
-      { year: 2012, event: 'Joins RHOA Season 5; the twirl begins', type: 'milestone' },
-      { year: 2013, event: 'Gone with the Wind Fabulous! — iconic reunion moment', type: 'drama' },
-      { year: 2016, event: 'Launches Kenya Moore Hair Care line', type: 'business' },
-      { year: 2017, event: 'Secret marriage to Marc Daly', type: 'milestone' },
-      { year: 2018, event: 'Birth of daughter Brooklyn — her miracle baby', type: 'milestone' },
-    ],
-  },
-  {
-    id: 7,
-    name: 'Kandi Burruss',
-    city: 'Atlanta',
-    status: 'Alum',
-    zodiac: 'Taurus',
-    seasons: '2-16',
-    seasonsArray: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-    taglines: [
-      { season: 2, text: 'Don\'t start none, won\'t be none.' },
-      { season: 5, text: 'I write the hits. Nobody writes me off.' },
-      { season: 10, text: 'I may be small, but my empire is mighty.' },
-      { season: 14, text: 'I came, I conquered, and I\'m still collecting checks.' },
-    ],
-    bio: 'Grammy-winning songwriter, entrepreneur, and the longest-running Atlanta Housewife. From Xscape to Old Lady Gang, Kandi built a multi-million dollar empire while keeping it real on RHOA.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Kandi_Burruss_2023.jpg/440px-Kandi_Burruss_2023.jpg',
-    color: '#FFD700',
-    alliances: ['Cynthia Bailey', 'Kenya Moore'],
-    enemies: ['Phaedra Parks', 'Porsha Williams'],
-    receipts: [
-      { year: 1999, event: 'Wins Grammy for writing TLC\'s "No Scrubs"', type: 'business' },
-      { year: 2009, event: 'Joins RHOA Season 2', type: 'milestone' },
-      { year: 2014, event: 'Opens Old Lady Gang restaurant', type: 'business' },
-      { year: 2017, event: 'Phaedra\'s drugging lie exposed at reunion — all-time moment', type: 'drama' },
-      { year: 2019, event: 'Wins Celebrity Big Brother', type: 'milestone' },
-      { year: 2023, event: 'Departs RHOA after 14 seasons as longest-running cast member', type: 'milestone' },
-    ],
-  },
-  {
-    id: 8,
-    name: 'Luann de Lesseps',
-    city: 'New York City',
-    status: 'OG',
-    zodiac: 'Taurus',
-    seasons: '1-14',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 1, text: 'I never feel guilty about being privileged.' },
-      { season: 3, text: 'I\'m a Countess, not a princess. Princesses have to be born into it.' },
-      { season: 9, text: 'The only title I\'d trade Countess for is wife.' },
-      { season: 12, text: 'I rise above the drama... in my cabaret.' },
-    ],
-    bio: 'The Countess turned cabaret queen. Luann\'s journey from etiquette expert to "Money Can\'t Buy You Class" singer to cabaret star is one of the most entertaining arcs in Housewives history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Luann_de_Lesseps_2019.jpg/440px-Luann_de_Lesseps_2019.jpg',
-    color: '#483D8B',
-    alliances: ['Sonja Morgan', 'Dorinda Medley'],
-    enemies: ['Bethenny Frankel', 'Ramona Singer'],
-    receipts: [
-      { year: 2008, event: 'Debuts on RHONY Season 1 as Countess de Lesseps', type: 'milestone' },
-      { year: 2010, event: 'Releases "Money Can\'t Buy You Class" single', type: 'business' },
-      { year: 2016, event: 'Whirlwind romance and marriage to Tom D\'Agostino', type: 'drama' },
-      { year: 2017, event: 'Divorce from Tom after 7 months; arrested in Palm Beach', type: 'legal' },
-      { year: 2018, event: 'Launches wildly successful Countess Cabaret tour', type: 'business' },
-    ],
-  },
-  {
-    id: 9,
-    name: 'Porsha Williams',
-    city: 'Atlanta',
-    status: 'Alum',
-    zodiac: 'Cancer',
-    seasons: '5-13',
-    seasonsArray: [5, 6, 7, 8, 9, 10, 11, 12, 13],
-    taglines: [
-      { season: 5, text: 'My life may not be a fairy tale, but I\'m still the princess.' },
-      { season: 9, text: 'I don\'t have to chase you; I replace you.' },
-      { season: 13, text: 'I stand on the shoulders of my ancestors, and I\'m reaching for the stars.' },
-    ],
-    bio: 'Civil rights legacy meets reality TV royalty. The granddaughter of Hosea Williams evolved from naïve newlywed to activist powerhouse, marching on the front lines of the BLM movement while keeping Atlanta entertained.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/PorshaWilliams.jpg/440px-PorshaWilliams.jpg',
-    color: '#FF69B4',
-    alliances: ['Kandi Burruss', 'Shamea Morton'],
-    enemies: ['Kenya Moore', 'NeNe Leakes'],
-    receipts: [
-      { year: 2012, event: 'Joins RHOA Season 5 as Kordell Stewart\'s wife', type: 'milestone' },
-      { year: 2014, event: 'Pulls Kenya\'s hair at the Season 6 reunion', type: 'drama' },
-      { year: 2017, event: 'Caught in the middle of Phaedra\'s lie at reunion', type: 'drama' },
-      { year: 2020, event: 'Becomes activist leader during BLM protests; arrested marching', type: 'milestone' },
-      { year: 2021, event: 'Engaged to Simon Guobadia; departs RHOA', type: 'milestone' },
-    ],
-  },
-  {
-    id: 10,
-    name: 'Erika Jayne',
-    city: 'Beverly Hills',
-    status: 'Housewife',
-    zodiac: 'Cancer',
-    seasons: '6-14',
-    seasonsArray: [6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 6, text: 'I\'m an enigma, wrapped in a riddle... and cash.' },
-      { season: 7, text: 'I may be two-faced, but at least both are pretty.' },
-      { season: 11, text: 'No one can silence my truth.' },
-      { season: 13, text: 'I\'m still standing, and I\'m still pretty.' },
-    ],
-    bio: 'Pop star alter ego meets courtroom drama. Erika\'s glamorous facade was shattered by the Tom Girardi embezzlement scandal, creating one of the most compelling and controversial storylines in Housewives history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Erika_Jayne_2018.jpg/440px-Erika_Jayne_2018.jpg',
-    color: '#DC143C',
-    alliances: ['Lisa Rinna', 'Dorit Kemsley'],
-    enemies: ['Sutton Stracke', 'Garcelle Beauvais'],
-    receipts: [
-      { year: 2016, event: 'Joins RHOBH Season 6 with alter ego Erika Jayne', type: 'milestone' },
-      { year: 2017, event: 'Stars on Broadway in Chicago as Roxie Hart', type: 'business' },
-      { year: 2020, event: 'Files for divorce from Tom Girardi', type: 'legal' },
-      { year: 2021, event: 'Tom Girardi embezzlement scandal explodes on Season 11', type: 'legal' },
-      { year: 2023, event: 'Continues on RHOBH amid ongoing legal battles', type: 'legal' },
-    ],
-  },
-  {
-    id: 11,
-    name: 'Karen Huger',
-    city: 'Potomac',
-    status: 'OG',
-    zodiac: 'Aquarius',
-    seasons: '1-8',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8],
-    taglines: [
-      { season: 1, text: 'I\'m the grande dame of Potomac, and I\'m not going anywhere.' },
-      { season: 3, text: 'I don\'t hold grudges; I just remember everything.' },
-      { season: 6, text: 'I put the "G" in grande dame... and also in "got you."' },
-      { season: 8, text: 'The grande dame always has the final word.' },
-    ],
-    bio: 'The self-proclaimed Grande Dame of Potomac. Karen\'s regal demeanor, shadowy tax drama with husband Ray, and her feud with Gizelle Bryant have made her the undeniable star of RHOP.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Karen_Huger.jpg/440px-Karen_Huger.jpg',
-    color: '#800080',
-    alliances: ['Ashley Darby', 'Mia Thornton'],
-    enemies: ['Gizelle Bryant', 'Robyn Dixon'],
-    receipts: [
-      { year: 2016, event: 'Debuts on RHOP Season 1 as the Grande Dame', type: 'milestone' },
-      { year: 2018, event: 'Ray Huger tax issues and "Surrey" address become major storylines', type: 'drama' },
-      { year: 2020, event: 'Launches La Dame fragrance line', type: 'business' },
-      { year: 2023, event: 'DUI arrest makes headlines', type: 'legal' },
-    ],
-  },
-  {
-    id: 12,
-    name: 'Ramona Singer',
-    city: 'New York City',
-    status: 'Alum',
-    zodiac: 'Scorpio',
-    seasons: '1-13',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    taglines: [
-      { season: 1, text: 'I can deal with a lot, but I can\'t deal with stupid.' },
-      { season: 5, text: 'I don\'t need to find love. I love myself.' },
-      { season: 10, text: 'I don\'t need a man, but I like having one.' },
-      { season: 13, text: 'I\'m ageless, I\'m timeless, I\'m Ramona.' },
-    ],
-    bio: 'The controversial queen of RHONY. Ramona\'s unfiltered mouth, "Ramonacoaster" personality, and iconic Pinot Grigio obsession made her one of the most entertaining — and polarizing — Housewives ever.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Ramona_Singer_2019.jpg/440px-Ramona_Singer_2019.jpg',
-    color: '#CD853F',
-    alliances: ['Sonja Morgan'],
-    enemies: ['Bethenny Frankel', 'Luann de Lesseps', 'Eboni K. Williams'],
-    receipts: [
-      { year: 2008, event: 'OG cast member of RHONY Season 1', type: 'milestone' },
-      { year: 2014, event: 'Launches Ramona Pinot Grigio wine brand', type: 'business' },
-      { year: 2016, event: 'Divorce from Mario Singer after affair scandal', type: 'drama' },
-      { year: 2019, event: '"Ramona-coaster" meltdown at Season 11 trip', type: 'drama' },
-      { year: 2021, event: 'Final season of legacy RHONY (Season 13)', type: 'milestone' },
-    ],
-  },
-  {
-    id: 13,
-    name: 'Garcelle Beauvais',
-    city: 'Beverly Hills',
-    status: 'Housewife',
-    zodiac: 'Scorpio',
-    seasons: '10-14',
-    seasonsArray: [10, 11, 12, 13, 14],
-    taglines: [
-      { season: 10, text: 'I may have a new zip code, but I\'ll always keep it real.' },
-      { season: 12, text: 'I came for the diamonds, and I\'m staying for the truth.' },
-      { season: 14, text: 'I don\'t fight. I just win.' },
-    ],
-    bio: 'Haitian-born actress and model who brought authenticity and grace to Beverly Hills. As the first Black cast member of RHOBH, Garcelle fearlessly addressed issues of race and accountability.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Garcelle_Beauvais_2022.jpg/440px-Garcelle_Beauvais_2022.jpg',
-    color: '#228B22',
-    alliances: ['Sutton Stracke', 'Crystal Kung Minkoff'],
-    enemies: ['Erika Jayne', 'Lisa Rinna'],
-    receipts: [
-      { year: 2020, event: 'Joins RHOBH Season 10 as first Black cast member', type: 'milestone' },
-      { year: 2021, event: 'Confronts Erika Jayne over legal scandal inconsistencies', type: 'drama' },
-      { year: 2022, event: 'Becomes fan favorite; faces online racism from "bots"', type: 'drama' },
-      { year: 2023, event: 'Co-hosts The Real daytime talk show', type: 'business' },
-    ],
-  },
-  {
-    id: 14,
-    name: 'Melissa Gorga',
-    city: 'New Jersey',
-    status: 'Housewife',
-    zodiac: 'Pisces',
-    seasons: '3-14',
-    seasonsArray: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 3, text: 'I don\'t need to prove anything. I am everything.' },
-      { season: 7, text: 'When people say I\'m fake, I know I\'m real.' },
-      { season: 11, text: 'I\'m not the underdog anymore. I\'m the whole show.' },
-    ],
-    bio: 'Teresa\'s sister-in-law turned co-star. Melissa\'s entrance on RHONJ sparked the greatest family feud in franchise history, and their complicated relationship has driven the show for over a decade.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Melissa_Gorga_2022.jpg/440px-Melissa_Gorga_2022.jpg',
-    color: '#FF6347',
-    alliances: ['Jackie Goldschneider', 'Margaret Josephs'],
-    enemies: ['Teresa Giudice', 'Jennifer Aydin'],
-    receipts: [
-      { year: 2011, event: 'Joins RHONJ Season 3; christening fight goes viral', type: 'drama' },
-      { year: 2012, event: 'Releases single "On Display"', type: 'business' },
-      { year: 2016, event: 'Opens Envy boutique', type: 'business' },
-      { year: 2022, event: 'Skips Teresa\'s wedding amid family rift', type: 'drama' },
-    ],
-  },
-  {
-    id: 15,
-    name: 'Lisa Rinna',
-    city: 'Beverly Hills',
-    status: 'Alum',
-    zodiac: 'Cancer',
-    seasons: '5-12',
-    seasonsArray: [5, 6, 7, 8, 9, 10, 11, 12],
-    taglines: [
-      { season: 5, text: 'In the game of Beverly Hills, you have to be willing to play dirty.' },
-      { season: 8, text: 'I may ruffle feathers, but I\'ll never eat crow.' },
-      { season: 12, text: 'Own it, baby. Own it all.' },
-    ],
-    bio: 'The self-proclaimed "Hustler" of Beverly Hills. Known for her iconic lips, dancing Instagram videos, and willingness to stir the pot, Rinna became one of the most divisive figures in Housewives history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Lisa_Rinna_at_the_2019_American_Music_Awards.png/440px-Lisa_Rinna_at_the_2019_American_Music_Awards.png',
-    color: '#B22222',
-    alliances: ['Erika Jayne', 'Kyle Richards'],
-    enemies: ['Lisa Vanderpump', 'Denise Richards', 'Kathy Hilton'],
-    receipts: [
-      { year: 2014, event: 'Joins RHOBH Season 5', type: 'milestone' },
-      { year: 2016, event: 'Smashes wine glass at dinner in Amsterdam: "Beast?!"', type: 'drama' },
-      { year: 2020, event: 'Rinna Wines and Rinna Beauty launch', type: 'business' },
-      { year: 2022, event: 'Feud with Kathy Hilton over Aspen meltdown dominates Season 12', type: 'drama' },
-      { year: 2023, event: 'Departs RHOBH after 8 seasons', type: 'milestone' },
-    ],
-  },
-  {
-    id: 16,
-    name: 'Gizelle Bryant',
-    city: 'Potomac',
-    status: 'OG',
-    zodiac: 'Virgo',
-    seasons: '1-8',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8],
-    taglines: [
-      { season: 1, text: 'I\'m Gizelle, and I\'m pretty — word to my mother.' },
-      { season: 4, text: 'Green-eyed, gorgeous, and gone with the wind fabulous.' },
-      { season: 6, text: 'I\'m the word on the street and the talk of the town.' },
-    ],
-    bio: 'Potomac\'s resident beauty and shade queen. The pastor\'s ex-wife keeps the drama flowing with her quick wit, questionable fashion choices (per the fans), and eternal rivalry with Karen Huger.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Gizelle_Bryant.jpg/440px-Gizelle_Bryant.jpg',
-    color: '#20B2AA',
-    alliances: ['Robyn Dixon', 'Ashley Darby'],
-    enemies: ['Karen Huger', 'Candiace Dillard'],
-    receipts: [
-      { year: 2016, event: 'OG cast member of RHOP Season 1', type: 'milestone' },
-      { year: 2019, event: 'Launches EveryHue Beauty cosmetics line', type: 'business' },
-      { year: 2020, event: 'Reconciles with ex-husband Pastor Jamal Bryant — then doesn\'t', type: 'drama' },
-      { year: 2022, event: 'Publishes memoir "My Word"', type: 'business' },
-    ],
-  },
-  {
-    id: 17,
-    name: 'Dorinda Medley',
-    city: 'New York City',
-    status: 'Alum',
-    zodiac: 'Sagittarius',
-    seasons: '7-12',
-    seasonsArray: [7, 8, 9, 10, 11, 12],
-    taglines: [
-      { season: 7, text: 'I have a lot of nice things to say... just not about everyone.' },
-      { season: 9, text: 'I\'ll tell you what — I always make it nice.' },
-      { season: 12, text: 'If I want your opinion, I\'ll give it to you.' },
-    ],
-    bio: 'Blue Stone Manor\'s hostess with the mostest. Dorinda\'s "Make It Nice" catchphrase, Berkshires parties, and emotional vulnerability made her a beloved — if occasionally combative — fan favorite.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Dorinda_Medley.jpg/440px-Dorinda_Medley.jpg',
-    color: '#6B8E23',
-    alliances: ['Bethenny Frankel', 'Luann de Lesseps'],
-    enemies: ['Tinsley Mortimer', 'Ramona Singer'],
-    receipts: [
-      { year: 2015, event: 'Joins RHONY Season 7 — "I\'ll make it nice!"', type: 'milestone' },
-      { year: 2017, event: 'Blue Stone Manor Halloween party becomes legendary', type: 'drama' },
-      { year: 2019, event: 'Confrontation with Tinsley: "Like a deer in headlights"', type: 'drama' },
-      { year: 2020, event: 'Departs RHONY after Season 12', type: 'milestone' },
-      { year: 2022, event: 'Stars on RHUGT Season 2 at Blue Stone Manor', type: 'milestone' },
-    ],
-  },
-  {
-    id: 18,
-    name: 'Phaedra Parks',
-    city: 'Atlanta',
-    status: 'Alum',
-    zodiac: 'Libra',
-    seasons: '3-9',
-    seasonsArray: [3, 4, 5, 6, 7, 8, 9],
-    taglines: [
-      { season: 3, text: 'I may be an attorney, but I ain\'t no fool.' },
-      { season: 6, text: 'Southern belles don\'t show their cards until it\'s time to collect.' },
-      { season: 9, text: 'I\'m the Southern belle of the ball, and I always will be.' },
-    ],
-    bio: 'The shady Southern belle attorney of Atlanta. Phaedra\'s penchant for confessional shade ("Fix it, Jesus") and her shocking exit from RHOA over the drugging lie scandal made her one of the franchise\'s most memorable figures.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Phaedra_Parks.jpg/440px-Phaedra_Parks.jpg',
-    color: '#DAA520',
-    alliances: ['Porsha Williams', 'Sheree Whitfield'],
-    enemies: ['Kandi Burruss', 'Kenya Moore'],
-    receipts: [
-      { year: 2010, event: 'Joins RHOA Season 3', type: 'milestone' },
-      { year: 2014, event: 'Apollo Nida sentenced to prison for fraud', type: 'legal' },
-      { year: 2016, event: 'Divorce from Apollo finalized', type: 'milestone' },
-      { year: 2017, event: 'Drugging lie about Kandi exposed; fired from RHOA', type: 'drama' },
-      { year: 2023, event: 'Joins RHOSLC and returns to Bravo universe', type: 'milestone' },
-    ],
-  },
-  {
-    id: 19,
-    name: 'Vicki Gunvalson',
-    city: 'Orange County',
-    status: 'Alum',
-    zodiac: 'Pisces',
-    seasons: '1-14',
-    seasonsArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    taglines: [
-      { season: 1, text: 'I\'m the OG of the OC.' },
-      { season: 5, text: 'I work hard, I play hard, and I whoop it up.' },
-      { season: 10, text: 'If you can\'t handle my love tank, you don\'t deserve me.' },
-      { season: 13, text: 'I am the OG, and don\'t you forget it.' },
-    ],
-    bio: 'The original Housewife who started it all. Vicki\'s "whoop it up" energy, insurance business, and the infamous Brooks cancer scam made her the most iconic — and longest-running — OG in franchise history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Vicki_Gunvalson.jpg/440px-Vicki_Gunvalson.jpg',
-    color: '#FF8C00',
-    alliances: ['Tamra Judge', 'Shannon Beador'],
-    enemies: ['Tamra Judge', 'Kelly Dodd'],
-    receipts: [
-      { year: 2006, event: 'Stars in the very first episode of RHOC — franchise is born', type: 'milestone' },
-      { year: 2012, event: 'Coto Insurance becomes her empire', type: 'business' },
-      { year: 2015, event: 'Brooks Ayers cancer scam scandal rocks Season 10', type: 'drama' },
-      { year: 2019, event: 'Demoted to "Friend of" for Season 14', type: 'milestone' },
-      { year: 2020, event: 'Final departure from RHOC', type: 'milestone' },
-    ],
-  },
-  {
-    id: 20,
-    name: 'Sutton Stracke',
-    city: 'Beverly Hills',
-    status: 'Housewife',
-    zodiac: 'Virgo',
-    seasons: '10-14',
-    seasonsArray: [10, 11, 12, 13, 14],
-    taglines: [
-      { season: 11, text: 'I may be new to the group, but I\'m no stranger to the spotlight.' },
-      { season: 12, text: 'I don\'t just wear couture — I am couture.' },
-      { season: 14, text: 'In a town full of labels, I\'m one of a kind.' },
-    ],
-    bio: 'The couture-wearing Southern socialite who fearlessly challenged Erika Jayne when others wouldn\'t. Sutton\'s quirky charm, expensive taste, and willingness to ask uncomfortable questions made her a fan favorite.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sutton_Stracke.jpg/440px-Sutton_Stracke.jpg',
-    color: '#DA70D6',
-    alliances: ['Garcelle Beauvais', 'Crystal Kung Minkoff'],
-    enemies: ['Erika Jayne', 'Diana Jenkins'],
-    receipts: [
-      { year: 2020, event: 'Joins RHOBH Season 10 as "Friend of"', type: 'milestone' },
-      { year: 2021, event: 'Promotes to full Housewife; confronts Erika about legal drama', type: 'drama' },
-      { year: 2022, event: 'Opens SUTTON boutique on Melrose Place', type: 'business' },
-      { year: 2023, event: 'Becomes one of the most popular Beverly Hills Housewives', type: 'milestone' },
-    ],
-  },
-  {
-    id: 21,
-    name: 'Mary Cosby',
-    city: 'Salt Lake City',
-    status: 'Alum',
-    zodiac: 'Libra',
-    seasons: '1-2',
-    seasonsArray: [1, 2],
-    taglines: [
-      { season: 1, text: 'God is my savior, but my grandfather is a very close second.' },
-      { season: 2, text: 'If you come for my family, you\'ll have to answer to a higher power.' },
-    ],
-    bio: 'The controversial Pentecostal First Lady who married her step-grandfather. Mary\'s bizarre confessionals, church empire, and mysterious disappearances made her one of the most fascinating Housewives in franchise history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Mary_Cosby.jpg/440px-Mary_Cosby.jpg',
-    color: '#4682B4',
-    alliances: ['Meredith Marks'],
-    enemies: ['Jen Shah', 'Lisa Barlow'],
-    receipts: [
-      { year: 2020, event: 'Joins RHOSLC Season 1 — married her step-grandfather', type: 'milestone' },
-      { year: 2021, event: 'Church fraud allegations surface', type: 'legal' },
-      { year: 2022, event: 'Skips Season 2 reunion; departs RHOSLC', type: 'milestone' },
-    ],
-  },
-  {
-    id: 22,
-    name: 'Lisa Barlow',
-    city: 'Salt Lake City',
-    status: 'Housewife',
-    zodiac: 'Sagittarius',
-    seasons: '1-5',
-    seasonsArray: [1, 2, 3, 4, 5],
-    taglines: [
-      { season: 1, text: 'I love that.' },
-      { season: 3, text: 'I don\'t just run my businesses — I own the block.' },
-      { season: 4, text: 'I love that for me.' },
-    ],
-    bio: 'The Vida Tequila mogul and fast-talking queen of Salt Lake City. Lisa\'s hot-mic rant against Meredith Marks became an instant classic, and her rapid-fire confessionals made her a breakout star.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Lisa_Barlow.jpg/440px-Lisa_Barlow.jpg',
-    color: '#C71585',
-    alliances: ['Heather Gay'],
-    enemies: ['Meredith Marks', 'Monica Garcia'],
-    receipts: [
-      { year: 2020, event: 'Joins RHOSLC Season 1 with Vida Tequila brand', type: 'milestone' },
-      { year: 2022, event: 'Hot-mic rant about Meredith: "I\'m gonna f—king murder her" goes viral', type: 'drama' },
-      { year: 2023, event: 'Reconciliation arc with Meredith becomes heartfelt storyline', type: 'milestone' },
-    ],
-  },
-  {
-    id: 23,
-    name: 'Candiace Dillard Bassett',
-    city: 'Potomac',
-    status: 'Alum',
-    zodiac: 'Capricorn',
-    seasons: '3-7',
-    seasonsArray: [3, 4, 5, 6, 7],
-    taglines: [
-      { season: 3, text: 'I\'m a beauty queen, but don\'t let the crown fool you.' },
-      { season: 5, text: 'I\'m not sugar and spice — I\'m fire and ice.' },
-      { season: 7, text: 'When they go low, I go all the way up.' },
-    ],
-    bio: 'The former Miss United States turned R&B singer. Candiace\'s sharp tongue, musical ambitions, and explosive confrontations (including the infamous butter knife and Monique altercation) made her appointment viewing.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Candiace_Dillard.jpg/440px-Candiace_Dillard.jpg',
-    color: '#FF4500',
-    alliances: ['Ashley Darby', 'Wendy Osefo'],
-    enemies: ['Monique Samuels', 'Gizelle Bryant'],
-    receipts: [
-      { year: 2018, event: 'Joins RHOP Season 3', type: 'milestone' },
-      { year: 2019, event: 'Butter knife confrontation at dinner goes viral', type: 'drama' },
-      { year: 2020, event: 'Physical altercation with Monique Samuels; files charges', type: 'drama' },
-      { year: 2022, event: 'Releases R&B single "Drive Back"', type: 'business' },
-    ],
-  },
-  {
-    id: 24,
-    name: 'Jen Shah',
-    city: 'Salt Lake City',
-    status: 'Alum',
-    zodiac: 'Libra',
-    seasons: '1-3',
-    seasonsArray: [1, 2, 3],
-    taglines: [
-      { season: 1, text: 'I am Jen Shah, and my style is Shah-mazing.' },
-      { season: 2, text: 'The only thing I\'m guilty of is being Shah-mazing.' },
-      { season: 3, text: 'I didn\'t come to play — I came to slay.' },
-    ],
-    bio: 'The flashy Tongan-Hawaiian queen of SLC whose legal drama became the most explosive real-life storyline in Housewives history. Her FBI arrest — caught on camera — and subsequent guilty plea made TV history.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Jen_Shah_2021.jpg/440px-Jen_Shah_2021.jpg',
-    color: '#FF0000',
-    alliances: ['Heather Gay', 'Whitney Rose'],
-    enemies: ['Mary Cosby', 'Meredith Marks'],
-    receipts: [
-      { year: 2020, event: 'Joins RHOSLC Season 1', type: 'milestone' },
-      { year: 2021, event: 'Arrested by FBI on camera for wire fraud conspiracy', type: 'legal' },
-      { year: 2022, event: 'Pleads guilty to wire fraud; faces up to 14 years', type: 'legal' },
-      { year: 2023, event: 'Sentenced to 6.5 years in federal prison', type: 'legal' },
-    ],
-  },
-]
+function toLegacy(person) {
+  const franchise = franchiseById.get(person.primaryFranchiseId)
+  const controversyReceipts = (controversiesByPersonId.get(person.id) || []).map((item) => ({
+    year: item.startYear,
+    event: item.title,
+    type: item.type === 'interpersonal' ? 'drama' : item.type,
+  }))
 
-/** Get the featured housewife of the day (rotates daily) */
+  const spouseReceipts = (relationshipsByPersonId.get(person.id) || [])
+    .filter((item) => item.notable)
+    .map((item) => ({
+      year: item.startYear || 'n/a',
+      event: `${item.relationshipType}: ${item.partnerName}`,
+      type: 'milestone',
+    }))
+
+  const firstSeason = Math.min(...person.seasonsArray)
+  const lastSeason = Math.max(...person.seasonsArray)
+
+  return {
+    id: person.id,
+    name: person.displayName,
+    city: franchise?.location.split(',')[0] || 'Unknown',
+    status: person.legacyStatus,
+    zodiac: person.zodiac,
+    seasons: `${firstSeason}-${lastSeason}`,
+    seasonsArray: person.seasonsArray,
+    taglines: person.taglines,
+    bio: person.bioShort,
+    image: person.imageUrl,
+    color: person.displayColor,
+    alliances: person.alliances || [],
+    enemies: person.enemies || [],
+    receipts: [...controversyReceipts, ...spouseReceipts].sort((a, b) => Number(a.year || 0) - Number(b.year || 0)),
+  }
+}
+
+export const housewives = people.map(toLegacy)
+export const cities = [...new Set(housewives.map((h) => h.city))].sort()
+
 export function getFeaturedHousewife() {
-  const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
-  )
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
   return housewives[dayOfYear % housewives.length]
 }
 
-/** Get all unique cities from the data */
 export function getCities() {
-  return [...new Set(housewives.map(h => h.city))].sort()
+  return cities
 }
 
-/** Filter housewives by search query, city, status, and zodiac */
 export function filterHousewives({ query = '', city = '', status = '', zodiac = '' }) {
-  return housewives.filter(h => {
-    const matchesQuery = !query ||
-      h.name.toLowerCase().includes(query.toLowerCase()) ||
-      h.city.toLowerCase().includes(query.toLowerCase()) ||
-      h.bio.toLowerCase().includes(query.toLowerCase()) ||
-      h.taglines.some(t => t.text.toLowerCase().includes(query.toLowerCase()))
-    const matchesCity = !city || h.city === city
-    const matchesStatus = !status || h.status === status
-    const matchesZodiac = !zodiac || h.zodiac === zodiac
+  const normalizedQuery = query.toLowerCase().trim()
+  return housewives.filter((housewife) => {
+    const matchesQuery = !normalizedQuery
+      || housewife.name.toLowerCase().includes(normalizedQuery)
+      || housewife.city.toLowerCase().includes(normalizedQuery)
+      || housewife.bio.toLowerCase().includes(normalizedQuery)
+      || housewife.taglines.some((tagline) => tagline.text.toLowerCase().includes(normalizedQuery))
+
+    const matchesCity = !city || housewife.city === city
+    const matchesStatus = !status || housewife.status === status
+    const matchesZodiac = !zodiac || housewife.zodiac === zodiac
+
     return matchesQuery && matchesCity && matchesStatus && matchesZodiac
   })
 }
 
-/** Get housewives by city for cast chronology */
 export function getHousewifesByCity(city) {
-  return housewives.filter(h => h.city === city).sort((a, b) => {
-    const aFirst = Math.min(...a.seasonsArray)
-    const bFirst = Math.min(...b.seasonsArray)
-    return aFirst - bFirst
-  })
+  return housewives
+    .filter((housewife) => housewife.city === city)
+    .sort((a, b) => Math.min(...a.seasonsArray) - Math.min(...b.seasonsArray))
 }
 
-/** Get a single housewife by ID */
 export function getHousewifeById(id) {
-  return housewives.find(h => h.id === Number(id))
+  return housewives.find((housewife) => housewife.id === Number(id))
 }

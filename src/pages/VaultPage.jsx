@@ -1,101 +1,206 @@
-import { useState, useMemo } from 'react'
-import { Diamond, Users } from 'lucide-react'
-import SearchBar from '../components/SearchBar'
-import LegacyCard from '../components/LegacyCard'
-import { filterHousewives, housewives } from '../data/housewives'
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { AlertTriangle, Filter, Heart, Search, Sparkles } from 'lucide-react'
+import { CastStatus, ControversyStatus, ControversyType, RoleType } from '../data/schema'
+import { getFranchises, searchPeople } from '../data/selectors'
+
+const roleLabels = {
+  [RoleType.FULL_TIME]: 'Full-Time',
+  [RoleType.FRIEND_OF]: 'Friend Of',
+  [RoleType.GUEST]: 'Guest',
+  [RoleType.SPOUSE_PARTNER]: 'Spouse/Partner',
+}
+
+const castStatusLabels = {
+  [CastStatus.CURRENT]: 'Current',
+  [CastStatus.ALUM]: 'Alum',
+  [CastStatus.PAUSED]: 'Paused',
+}
 
 export default function VaultPage() {
+  const franchises = getFranchises()
   const [query, setQuery] = useState('')
-  const [filters, setFilters] = useState({ city: '', status: '', zodiac: '' })
+  const [filters, setFilters] = useState({
+    franchiseId: '',
+    roleType: '',
+    castStatus: '',
+    hasNotableSpouse: false,
+    controversyType: '',
+    controversyStatus: '',
+    minSeverity: '',
+    rumorPolicy: 'show_labeled',
+  })
 
-  const results = useMemo(
-    () => filterHousewives({ query, ...filters }),
+  const people = useMemo(
+    () => searchPeople(query, {
+      ...filters,
+      franchiseId: filters.franchiseId || undefined,
+      roleType: filters.roleType || undefined,
+      castStatus: filters.castStatus || undefined,
+      controversyType: filters.controversyType || undefined,
+      controversyStatus: filters.controversyStatus || undefined,
+      minSeverity: filters.minSeverity ? Number(filters.minSeverity) : undefined,
+    }),
     [query, filters]
   )
 
-  const isFiltering = query || filters.city || filters.status || filters.zodiac
-
-  // Stats
-  const stats = useMemo(() => {
-    const cityCount = new Set(housewives.map(h => h.city)).size
-    const ogCount = housewives.filter(h => h.status === 'OG').length
-    return { total: housewives.length, cities: cityCount, ogs: ogCount }
-  }, [])
-
   return (
     <div className="min-h-screen marble-bg">
-      {/* Header */}
       <div className="bg-gradient-to-b from-obsidian to-obsidian/95 text-white py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Diamond className="w-8 h-8 text-gold mx-auto mb-4" />
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold">
-            The Vault
-          </h1>
-          <p className="mt-3 text-sm sm:text-base text-white/40 max-w-lg mx-auto">
-            The complete searchable directory of every Real Housewife in franchise history.
+          <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold">Knowledge Vault</h1>
+          <p className="mt-3 text-sm sm:text-base text-white/45 max-w-2xl mx-auto">
+            Main cast, side cast, notable spouses, and sourced controversies across Bravo core franchises.
           </p>
-
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-6 sm:gap-10 mt-8">
-            <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-display font-bold text-gold">{stats.total}</p>
-              <p className="text-[10px] sm:text-xs text-white/30 uppercase tracking-wider mt-1">Housewives</p>
-            </div>
-            <div className="w-px h-10 bg-white/10" />
-            <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-display font-bold text-gold">{stats.cities}</p>
-              <p className="text-[10px] sm:text-xs text-white/30 uppercase tracking-wider mt-1">Cities</p>
-            </div>
-            <div className="w-px h-10 bg-white/10" />
-            <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-display font-bold text-gold">{stats.ogs}</p>
-              <p className="text-[10px] sm:text-xs text-white/30 uppercase tracking-wider mt-1">OGs</p>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Search and Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <SearchBar
-          query={query}
-          onQueryChange={setQuery}
-          filters={filters}
-          onFiltersChange={setFilters}
-        />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 grid lg:grid-cols-[300px_1fr] gap-6">
+        <aside className="bg-white rounded-2xl border border-gold/10 p-5 space-y-4 h-fit">
+          <h2 className="font-display text-lg flex items-center gap-2 text-obsidian">
+            <Filter className="w-4 h-4 text-gold" />
+            Filters
+          </h2>
 
-        <div className="mt-6 mb-6 sm:mt-8 sm:mb-8 flex items-center gap-2">
-          <Users className="w-4 h-4 text-obsidian/30" />
-          <p className="text-xs text-obsidian/40">
-            {isFiltering
-              ? `${results.length} result${results.length !== 1 ? 's' : ''} found`
-              : `Showing all ${results.length} Housewives`
-            }
+          <label className="block">
+            <span className="text-xs text-obsidian/50">Search</span>
+            <div className="relative mt-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-obsidian/30" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Name, alias, franchise..."
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-gold/20 text-sm"
+              />
+            </div>
+          </label>
+
+          <Select
+            label="Franchise"
+            value={filters.franchiseId}
+            onChange={(franchiseId) => setFilters((prev) => ({ ...prev, franchiseId }))}
+            options={franchises.map((franchise) => ({ label: franchise.name, value: franchise.id }))}
+          />
+
+          <Select
+            label="Role"
+            value={filters.roleType}
+            onChange={(roleType) => setFilters((prev) => ({ ...prev, roleType }))}
+            options={Object.entries(roleLabels).map(([value, label]) => ({ value, label }))}
+          />
+
+          <Select
+            label="Cast Status"
+            value={filters.castStatus}
+            onChange={(castStatus) => setFilters((prev) => ({ ...prev, castStatus }))}
+            options={Object.entries(castStatusLabels).map(([value, label]) => ({ value, label }))}
+          />
+
+          <Select
+            label="Controversy Type"
+            value={filters.controversyType}
+            onChange={(controversyType) => setFilters((prev) => ({ ...prev, controversyType }))}
+            options={Object.values(ControversyType).map((value) => ({ value, label: value.replace('_', ' ') }))}
+          />
+
+          <Select
+            label="Controversy Status"
+            value={filters.controversyStatus}
+            onChange={(controversyStatus) => setFilters((prev) => ({ ...prev, controversyStatus }))}
+            options={Object.values(ControversyStatus).map((value) => ({ value, label: value }))}
+          />
+
+          <Select
+            label="Min Severity"
+            value={filters.minSeverity}
+            onChange={(minSeverity) => setFilters((prev) => ({ ...prev, minSeverity }))}
+            options={[1, 2, 3, 4, 5].map((value) => ({ value: String(value), label: `${value}+` }))}
+          />
+
+          <label className="flex items-center justify-between text-sm text-obsidian/70">
+            Notable spouse only
+            <input
+              type="checkbox"
+              checked={filters.hasNotableSpouse}
+              onChange={(event) => setFilters((prev) => ({ ...prev, hasNotableSpouse: event.target.checked }))}
+            />
+          </label>
+
+          <label className="flex items-center justify-between text-sm text-obsidian/70">
+            Show labeled rumors
+            <input
+              type="checkbox"
+              checked={filters.rumorPolicy === 'show_labeled'}
+              onChange={(event) => setFilters((prev) => ({ ...prev, rumorPolicy: event.target.checked ? 'show_labeled' : 'hide' }))}
+            />
+          </label>
+        </aside>
+
+        <section>
+          <p className="text-xs text-obsidian/40 mb-4">
+            {people.length} profiles matched
           </p>
-        </div>
 
-        {results.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
-            {results.map((hw, i) => (
-              <div
-                key={hw.id}
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${i * 40}ms` }}
+          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {people.map((person) => (
+              <Link
+                key={person.id}
+                to={`/housewife/${person.id}`}
+                className="bg-white rounded-2xl border border-gold/10 p-4 no-underline hover:shadow-md transition-shadow"
               >
-                <LegacyCard housewife={hw} />
-              </div>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-base font-display text-obsidian">{person.displayName}</p>
+                    <p className="text-xs text-obsidian/45 mt-0.5">{person.bioShort}</p>
+                  </div>
+                  <span className="text-[10px] px-2 py-1 rounded-full bg-gold/10 text-gold-dark">
+                    {roleLabels[person.currentRoleType]}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-2 text-[10px]">
+                  <span className="px-2 py-1 rounded-full bg-marble text-obsidian/60">{castStatusLabels[person.castStatus]}</span>
+                  <span className="px-2 py-1 rounded-full bg-marble text-obsidian/60">{person.controversyCount} controversies</span>
+                  {person.notableSpouseCount > 0 && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-rose-light/50 text-rose">
+                      <Heart className="w-3 h-3" />
+                      notable spouse
+                    </span>
+                  )}
+                </div>
+
+                {person.controversyCount > 0 && (
+                  <div className="mt-3 text-xs text-obsidian/50 inline-flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                    Includes sourced controversy records
+                  </div>
+                )}
+              </Link>
             ))}
           </div>
-        ) : (
-          <div className="text-center py-16 sm:py-24">
-            <Diamond className="w-12 h-12 text-gold/20 mx-auto mb-4" />
-            <h3 className="font-display text-xl text-obsidian/40">No Results</h3>
-            <p className="mt-2 text-sm text-obsidian/30">
-              No Housewives match your search criteria.
-            </p>
-          </div>
-        )}
+        </section>
       </div>
     </div>
+  )
+}
+
+function Select({ label, value, options, onChange }) {
+  return (
+    <label className="block">
+      <span className="text-xs text-obsidian/50">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="mt-1 w-full px-3 py-2.5 rounded-xl border border-gold/20 text-sm"
+      >
+        <option value="">All</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
   )
 }

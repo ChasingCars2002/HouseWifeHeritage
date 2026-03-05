@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage'
 import VaultPage from './pages/VaultPage'
 import BioPage from './pages/BioPage'
 import ChronologyPage from './pages/ChronologyPage'
+import DatabasePage from './pages/DatabasePage'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/vault" element={<VaultPage />} />
           <Route path="/housewife/:id" element={<BioPage />} />
           <Route path="/chronology" element={<ChronologyPage />} />
+          <Route path="/database" element={<DatabasePage />} />
         </Routes>
       </main>
       <Footer />

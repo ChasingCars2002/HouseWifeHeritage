@@ -1,310 +1,164 @@
-import { useParams, Link } from 'react-router-dom'
-import {
-  ArrowLeft, MapPin, Sparkles, Star, Play, Heart, Swords,
-  Calendar, Scale, Briefcase, Flame, Crown, Diamond
-} from 'lucide-react'
-import { getHousewifeById, housewives } from '../data/housewives'
+import { useMemo, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { AlertTriangle, ArrowLeft, Calendar, HeartHandshake, ShieldCheck, Users } from 'lucide-react'
+import { getPersonProfile } from '../data/selectors'
+
+const roleColors = {
+  full_time: 'bg-gold/20 text-gold-dark',
+  friend_of: 'bg-blue-100 text-blue-700',
+  guest: 'bg-gray-100 text-gray-700',
+  spouse_partner: 'bg-rose-100 text-rose-700',
+}
 
 export default function BioPage() {
   const { id } = useParams()
-  const hw = getHousewifeById(id)
+  const [activeTab, setActiveTab] = useState('cast')
+  const profile = useMemo(() => getPersonProfile(id, { rumorPolicy: 'show_labeled' }), [id])
 
-  if (!hw) {
+  if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center marble-bg">
+      <div className="min-h-screen marble-bg flex items-center justify-center">
         <div className="text-center">
-          <Diamond className="w-16 h-16 text-gold/20 mx-auto mb-4" />
-          <h1 className="font-display text-2xl text-obsidian/40">Housewife Not Found</h1>
-          <Link to="/" className="mt-4 inline-block text-gold hover:text-gold-dark text-sm">
-            ← Back to Home
-          </Link>
+          <h1 className="font-display text-2xl text-obsidian/50">Profile not found</h1>
+          <Link to="/vault" className="text-sm text-gold mt-3 inline-block">Back to vault</Link>
         </div>
       </div>
     )
   }
 
-  const receiptTypeIcon = {
-    milestone: Crown,
-    drama: Flame,
-    business: Briefcase,
-    legal: Scale,
-  }
-
-  const receiptTypeColor = {
-    milestone: 'text-gold bg-gold/10',
-    drama: 'text-rose bg-rose-light/50',
-    business: 'text-emerald-600 bg-emerald-50',
-    legal: 'text-blue-600 bg-blue-50',
-  }
-
-  // Find related housewives (alliances/enemies)
-  const allAlliances = hw.alliances
-    .map(name => housewives.find(h => h.name === name))
-    .filter(Boolean)
-  const allEnemies = hw.enemies
-    .map(name => housewives.find(h => h.name === name))
-    .filter(Boolean)
+  const { person, castTimeline, relationships, controversies } = profile
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Banner */}
-      <div className="relative bg-obsidian overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{ background: `linear-gradient(135deg, ${hw.color}60, transparent)` }}
-        />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-white/40 hover:text-white text-sm mb-6 no-underline transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Collection
+    <div className="min-h-screen marble-bg">
+      <div className="bg-obsidian text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <Link to="/vault" className="inline-flex items-center gap-2 text-white/50 hover:text-white text-sm no-underline">
+            <ArrowLeft className="w-4 h-4" /> Back to Vault
           </Link>
 
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 sm:gap-8">
-            {/* Photo */}
-            <div className="relative shrink-0">
-              <div
-                className="absolute -inset-2 rounded-2xl opacity-30 blur-md"
-                style={{ background: hw.color }}
-              />
-              <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-2xl overflow-hidden border-2 border-gold/30">
-                <img
-                  src={hw.image}
-                  alt={hw.name}
-                  className="w-full h-full object-cover object-top"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                    e.target.parentElement.innerHTML = `
-                      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gold/20 to-gold/5">
-                        <span class="text-6xl font-display font-bold text-gold/50">${hw.name.charAt(0)}</span>
-                      </div>
-                    `
-                  }}
-                />
-              </div>
+          <div className="mt-4 flex items-end justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="font-display text-3xl sm:text-4xl font-bold">{person.displayName}</h1>
+              <p className="text-white/50 mt-2 max-w-3xl text-sm">{person.bioShort}</p>
             </div>
-
-            {/* Name and meta */}
-            <div className="text-center sm:text-left pb-1">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-3">
-                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                  hw.status === 'OG'
-                    ? 'bg-gold text-obsidian'
-                    : 'bg-white/10 text-white/70'
-                }`}>
-                  {hw.status === 'OG' && <Star className="w-3 h-3" />}
-                  {hw.status}
-                </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/10 rounded-full text-white/60 text-xs">
-                  <MapPin className="w-3 h-3" /> {hw.city}
-                </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/10 rounded-full text-white/60 text-xs">
-                  <Sparkles className="w-3 h-3" /> {hw.zodiac}
-                </span>
-              </div>
-              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
-                {hw.name}
-              </h1>
-              <p className="mt-2 text-sm text-white/30">Seasons {hw.seasons}</p>
+            <div className="text-xs text-white/50">
+              Last updated baseline: March 5, 2026
             </div>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="marble-bg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Main column */}
-            <div className="lg:col-span-2 space-y-10">
-              {/* Bio */}
-              <section>
-                <h2 className="font-display text-xl font-semibold text-obsidian mb-4">About</h2>
-                <p className="text-sm sm:text-base text-obsidian/60 leading-relaxed">{hw.bio}</p>
-              </section>
-
-              {/* Iconic Taglines */}
-              <section>
-                <h2 className="font-display text-xl font-semibold text-obsidian mb-4 flex items-center gap-2">
-                  <Play className="w-5 h-5 text-gold" />
-                  Iconic Taglines
-                </h2>
-                <div className="space-y-3">
-                  {hw.taglines.map((tagline, i) => (
-                    <div
-                      key={i}
-                      className="flex items-start gap-3 p-4 bg-white rounded-xl border border-gold/10 hover:border-gold/30 transition-colors group"
-                    >
-                      <div className="shrink-0 w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                        <Play className="w-3.5 h-3.5 text-gold" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-obsidian/70 italic leading-relaxed">
-                          "{tagline.text}"
-                        </p>
-                        <p className="mt-1 text-[10px] text-obsidian/30 uppercase tracking-wider font-medium">
-                          Season {tagline.season}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* The Receipts */}
-              <section>
-                <h2 className="font-display text-xl font-semibold text-obsidian mb-4 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-gold" />
-                  The Receipts
-                </h2>
-                <div className="relative">
-                  {/* Timeline line */}
-                  <div className="absolute left-[18px] top-2 bottom-2 w-0.5 timeline-line" />
-
-                  <div className="space-y-4">
-                    {hw.receipts.map((receipt, i) => {
-                      const Icon = receiptTypeIcon[receipt.type] || Crown
-                      const colorClass = receiptTypeColor[receipt.type] || 'text-gold bg-gold/10'
-                      return (
-                        <div key={i} className="relative flex gap-4 pl-1">
-                          <div className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center z-10 ${colorClass}`}>
-                            <Icon className="w-4 h-4" />
-                          </div>
-                          <div className="flex-1 pb-4">
-                            <p className="text-xs font-semibold text-gold-dark">{receipt.year}</p>
-                            <p className="text-sm text-obsidian/60 mt-0.5 leading-relaxed">{receipt.event}</p>
-                            <span className={`mt-1.5 inline-block text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full ${colorClass}`}>
-                              {receipt.type}
-                            </span>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-8">
-              {/* Family Tree - Alliances */}
-              <section className="bg-white rounded-2xl border border-gold/10 p-5 sm:p-6">
-                <h3 className="font-display text-lg font-semibold text-obsidian mb-4 flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-rose" />
-                  Alliances
-                </h3>
-                {allAlliances.length > 0 ? (
-                  <div className="space-y-2">
-                    {allAlliances.map((ally) => (
-                      <Link
-                        key={ally.id}
-                        to={`/housewife/${ally.id}`}
-                        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-marble/50 transition-colors no-underline"
-                      >
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white font-display font-bold text-xs"
-                          style={{ background: ally.color }}
-                        >
-                          {ally.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-obsidian">{ally.name}</p>
-                          <p className="text-[10px] text-obsidian/40">{ally.city}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-obsidian/30 italic">No alliances recorded</p>
-                )}
-
-                {/* Unlinked alliance names */}
-                {hw.alliances.filter(name => !housewives.find(h => h.name === name)).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gold/10">
-                    {hw.alliances
-                      .filter(name => !housewives.find(h => h.name === name))
-                      .map(name => (
-                        <p key={name} className="text-xs text-obsidian/40 py-1">{name}</p>
-                      ))
-                    }
-                  </div>
-                )}
-              </section>
-
-              {/* Family Tree - Enemies */}
-              <section className="bg-white rounded-2xl border border-gold/10 p-5 sm:p-6">
-                <h3 className="font-display text-lg font-semibold text-obsidian mb-4 flex items-center gap-2">
-                  <Swords className="w-4 h-4 text-obsidian/40" />
-                  Rivals
-                </h3>
-                {allEnemies.length > 0 ? (
-                  <div className="space-y-2">
-                    {allEnemies.map((enemy) => (
-                      <Link
-                        key={enemy.id}
-                        to={`/housewife/${enemy.id}`}
-                        className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-marble/50 transition-colors no-underline"
-                      >
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white font-display font-bold text-xs"
-                          style={{ background: enemy.color }}
-                        >
-                          {enemy.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-obsidian">{enemy.name}</p>
-                          <p className="text-[10px] text-obsidian/40">{enemy.city}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-obsidian/30 italic">No rivalries recorded</p>
-                )}
-
-                {hw.enemies.filter(name => !housewives.find(h => h.name === name)).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gold/10">
-                    {hw.enemies
-                      .filter(name => !housewives.find(h => h.name === name))
-                      .map(name => (
-                        <p key={name} className="text-xs text-obsidian/40 py-1">{name}</p>
-                      ))
-                    }
-                  </div>
-                )}
-              </section>
-
-              {/* Quick Facts */}
-              <section className="bg-white rounded-2xl border border-gold/10 p-5 sm:p-6">
-                <h3 className="font-display text-lg font-semibold text-obsidian mb-4">Quick Facts</h3>
-                <dl className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <dt className="text-obsidian/40">City</dt>
-                    <dd className="text-obsidian font-medium">{hw.city}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-obsidian/40">Zodiac</dt>
-                    <dd className="text-obsidian font-medium">{hw.zodiac}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-obsidian/40">Status</dt>
-                    <dd className="text-obsidian font-medium">{hw.status}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-obsidian/40">Seasons</dt>
-                    <dd className="text-obsidian font-medium">{hw.seasons}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="text-obsidian/40">Taglines</dt>
-                    <dd className="text-obsidian font-medium">{hw.taglines.length}</dd>
-                  </div>
-                </dl>
-              </section>
-            </div>
-          </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <div className="bg-white rounded-2xl border border-gold/10 p-2 flex gap-2">
+          <TabButton label="Cast History" active={activeTab === 'cast'} onClick={() => setActiveTab('cast')} icon={<Users className="w-4 h-4" />} />
+          <TabButton label="Relationships" active={activeTab === 'relationships'} onClick={() => setActiveTab('relationships')} icon={<HeartHandshake className="w-4 h-4" />} />
+          <TabButton label="Controversies" active={activeTab === 'controversies'} onClick={() => setActiveTab('controversies')} icon={<AlertTriangle className="w-4 h-4" />} />
         </div>
+
+        {activeTab === 'cast' && (
+          <section className="bg-white rounded-2xl border border-gold/10 p-5 sm:p-6">
+            <h2 className="font-display text-xl text-obsidian mb-4">Cast History</h2>
+            <div className="space-y-3">
+              {castTimeline.map((entry) => (
+                <div key={entry.id} className="flex items-center justify-between border border-gold/10 rounded-xl p-3">
+                  <div>
+                    <p className="text-sm font-medium text-obsidian">{entry.franchise?.name}</p>
+                    <p className="text-xs text-obsidian/40">Season {entry.season}</p>
+                  </div>
+                  <span className={`text-xs px-2.5 py-1 rounded-full ${roleColors[entry.roleType] || 'bg-marble text-obsidian/60'}`}>
+                    {entry.roleType.replace('_', ' ')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'relationships' && (
+          <section className="bg-white rounded-2xl border border-gold/10 p-5 sm:p-6">
+            <h2 className="font-display text-xl text-obsidian mb-4">Notable Spouses & Partners</h2>
+            <div className="space-y-4">
+              {relationships.map((entry) => (
+                <div key={entry.id} className="border border-gold/10 rounded-xl p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-obsidian">{entry.partnerName}</p>
+                      <p className="text-xs text-obsidian/40">{entry.relationshipType} • {entry.startYear || 'n/a'} - {entry.endYear || 'present'}</p>
+                    </div>
+                    {entry.notable && <span className="text-[10px] px-2 py-1 rounded-full bg-rose-light/50 text-rose">notable</span>}
+                  </div>
+                  <p className="mt-2 text-sm text-obsidian/60">{entry.notes}</p>
+                  <SourceChips sources={entry.sources} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'controversies' && (
+          <section className="bg-white rounded-2xl border border-gold/10 p-5 sm:p-6">
+            <h2 className="font-display text-xl text-obsidian mb-4">Controversies</h2>
+            <div className="space-y-4">
+              {controversies.map((entry) => (
+                <div key={entry.id} className="border border-gold/10 rounded-xl p-4">
+                  <div className="flex flex-wrap items-center gap-2 justify-between">
+                    <p className="text-sm font-semibold text-obsidian">{entry.title}</p>
+                    <div className="flex flex-wrap gap-2 text-[10px]">
+                      <span className="px-2 py-1 rounded-full bg-marble text-obsidian/60">{entry.type}</span>
+                      <span className="px-2 py-1 rounded-full bg-marble text-obsidian/60">{entry.status}</span>
+                      <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-700">severity {entry.severity}/5</span>
+                      {entry.isRumor && <span className="px-2 py-1 rounded-full bg-red-100 text-red-700">rumor</span>}
+                    </div>
+                  </div>
+                  <p className="mt-2 text-sm text-obsidian/60">{entry.summary}</p>
+                  <p className="mt-2 text-xs text-obsidian/40 inline-flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {entry.startYear} {entry.endYear ? `- ${entry.endYear}` : ''}
+                  </p>
+                  <SourceChips sources={entry.sources} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function TabButton({ label, icon, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm border-none cursor-pointer transition-colors ${
+        active ? 'bg-gold text-obsidian' : 'bg-transparent text-obsidian/50 hover:bg-marble'
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
+  )
+}
+
+function SourceChips({ sources }) {
+  return (
+    <div className="mt-3 space-y-1">
+      <p className="text-[10px] uppercase tracking-wider text-obsidian/35 inline-flex items-center gap-1">
+        <ShieldCheck className="w-3.5 h-3.5" /> Source quality
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {sources.map((source) => (
+          <a
+            key={source.id}
+            href={source.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-[10px] px-2 py-1 rounded-full bg-marble text-obsidian/60 no-underline"
+            title={`${source.tier} • ${source.reliabilityScore}/5`}
+          >
+            {source.publisher} ({source.reliabilityScore}/5)
+          </a>
+        ))}
       </div>
     </div>
   )
